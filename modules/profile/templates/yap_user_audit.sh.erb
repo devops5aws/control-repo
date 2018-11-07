@@ -1,0 +1,96 @@
+#!/bin/bash
+#
+# SCRIPT: yap-user-audit
+#
+# AUTHOR:  Kastus Shchuka <kshchuka@yapstone.com>
+#
+# PURPOSE: capture what root does in a log file using script command
+#
+# USAGE: invoked from .ssh/authorized_keys
+# 	e.g.
+# 	command="/usr/local/sbin/yap-user-audit.sh user",no-port-forwarding ssh-rsa AAA... user@host
+#
+# REV LIST:
+# DATE: 03/15/2015
+# REV: 0.0.1
+# DATE: 05/20/2015
+# REV: 0.0.2
+# DATE: 05/28/2015
+# REV: 0.0.3
+# DATE: 06/16/2015
+# REV: 0.0.4
+#
+# set -n # Uncomment to check syntax without any execution
+# set -x # Uncomment to debug this shell script
+#
+## Deprecated for AWS
+#LOG_SERVER=syslog.yapstone.com
+#LOG_MANAGER="logman@$LOG_SERVER"
+##
+source /tmp/audit_user
+rm -rf /tmp/audit_user
+
+S3_SYNC_LOG () {
+   /usr/bin/aws s3 sync --exclude "*" --include "*$(date +%Y%m%d)*" /var/log/yap-user-audit \
+   s3://root-audit-logs/<%= @region_zone %>/$(date +%Y%m%d) \
+   --sse 'aws:kms' --sse-kms-key-id '<%= @kms_key %>'
+}
+
+cleanup_exit ()
+{
+# This function is executed upon any type of exit except kill -9,
+# which cannot be trapped.
+
+/bin/logger -p authpriv.info -t yap-user-audit "${EFF_USER} logged out on ${THISHOST}"
+
+if [[ -s ${LOGDIR}/${LOGFILE}.txt ]]
+then
+        ## Deprecated for AWS
+	#/usr/bin/uuencode -m ${LOGDIR}/${LOGFILE} /dev/stdout | \
+        #/bin/mail -s "$LOGFILE" $LOG_MANAGER
+        ## 
+                $(S3_SYNC_LOG) 2>/dev/null
+fi
+exit
+}
+
+### Set a trap
+trap 'cleanup_exit' 1 2 3 5 15
+
+### Variables
+#EFF_USER=`pwd |cut -d'/' -f3`
+EFF_USER=$AUDIT_USER
+echo "### $EFF_USER has sudo ###"
+TS=$(date +%Y%m%d.%H%M%S)
+THISHOST=$(hostname -s)
+LOGDIR=/var/log/yap-user-audit
+LOGFILE=${THISHOST}.${EFF_USER}.$TS
+touch ${LOGDIR}/${LOGFILE}
+TMOUT=900
+export TMOUT
+set -o vi
+#stty erase ^?
+
+PS1="$THISHOST:${EFF_USER}# "
+export PS1
+
+/bin/logger -p authpriv.info -t yap-user-audit "${EFF_USER} logged in on ${THISHOST}"
+
+chmod 600 ${LOGDIR}/${LOGFILE}*
+
+if [ -z "${SSH_ORIGINAL_COMMAND}" ]
+then
+	/usr/bin/script -q -f ${LOGDIR}/${LOGFILE}
+        /usr/bin/col -bpx < ${LOGDIR}/${LOGFILE} >> ${LOGDIR}/${LOGFILE}.txt
+        #deleting non printable characters file
+        /bin/rm -rf ${LOGDIR}/${LOGFILE}
+else
+	echo "$PS1 ${SSH_ORIGINAL_COMMAND}" > ${LOGDIR}/${LOGFILE}
+	/bin/bash -c "${SSH_ORIGINAL_COMMAND}" | /usr/bin/tee -a ${LOGDIR}/${LOGFILE}
+        /usr/bin/col -bpx < ${LOGDIR}/${LOGFILE} >> ${LOGDIR}/${LOGFILE}.txt
+        #deleting non printable characters file
+        /bin/rm -rf ${LOGDIR}/${LOGFILE}
+fi
+chmod 400 ${LOGDIR}/${LOGFILE}*
+rm -rf /tmp/audit_user
+cleanup_exit

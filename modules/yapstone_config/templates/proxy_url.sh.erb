@@ -1,0 +1,29 @@
+#!/bin/bash
+#
+# generate mod_proxy config for URL specified as $1 to tomcat on IP $2
+#
+
+if host $2 >/dev/null
+then
+       PSVR=$(host $2 | sed -e 's/.* has address //')
+else
+       PSVR="<%= @proxy_url_ip %>"
+fi
+
+if [ $# -eq 3 ]
+then
+        port=$3
+else
+        port=<%= @proxy_url_server_port %>
+fi
+
+cat <<_EOH
+\$HTTP["url"] =~ "^/$1" {
+  proxy.server = ( "" =>
+    ("app" =>
+    ( "host" => "$PSVR",
+        "port" => ${port} )
+    )
+  )
+}
+_EOH

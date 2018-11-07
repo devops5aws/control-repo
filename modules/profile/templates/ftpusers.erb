@@ -1,0 +1,5 @@
+# MANAGED BY PUPPET
+# Users that are not allowed to login via ftp
+<% scope.function_hiera(['profile::vsftp::ftpuser']).each do |line| -%>
+<%= line %>
+<% end -%>

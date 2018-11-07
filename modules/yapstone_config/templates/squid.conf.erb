@@ -1,0 +1,44 @@
+acl all src all
+acl manager proto cache_object
+acl localhost src 127.0.0.1/32
+acl to_localhost dst 127.0.0.0/8
+<% @ssl_ports.each do |line| -%>
+acl SSL_ports port <%= line %>
+<% end -%>
+<% @safe_ports.each do |line| -%>
+acl Safe_ports port <%= line %>
+<% end -%>
+acl CONNECT method CONNECT
+http_access allow manager localhost
+http_access deny manager
+http_access deny !Safe_ports
+http_access deny CONNECT !SSL_ports
+<%- if @ec2_tag_component == 'qa_usw2' -%> 
+acl app_servers src <%= @acl_app_server %>
+acl whitelist dstdomain "<%= @acl_whitelist_dir %>"
+http_access deny !whitelist
+http_access allow app_servers
+<%- elsif @ec2_tag_component == 'st_usw2' || @ec2_tag_component == 'pd_euw1' ||  @ec2_tag_component == 'pd_usw2' -%>
+<% @acl_config.each do |line| -%>
+acl <%= line %>
+<% end -%>
+<% @http_access.each do |line| -%>
+http_access allow <%= line %>
+<% end -%>
+<%- end -%>
+http_access allow localhost
+http_access deny all
+icp_access allow all
+access_log /var/log/squid/access.log squid
+acl QUERY urlpath_regex cgi-bin \?
+cache deny QUERY
+refresh_pattern ^ftp:		1440	20%	10080
+refresh_pattern ^gopher:	1440	0%	1440
+refresh_pattern .		0	20%	4320
+acl apache rep_header Server ^Apache
+always_direct allow all
+coredump_dir /var/spool/squid
+acl frontend src <%= @cidr_whitelist %>
+proxy_protocol_access allow frontend
+http_port <%= @http_port %> require-proxy-header
+http_port 443 intercept

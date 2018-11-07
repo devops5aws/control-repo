@@ -1,0 +1,34 @@
+
+# These are set by puppet::master
+[master]
+  # These ssl_client settings are required for running
+  # puppetmaster under mod_passenger
+  ssl_client_header         = SSL_CLIENT_S_DN
+  ssl_client_verify_header  = SSL_CLIENT_VERIFY
+  <%- if @autosign -%>
+  autosign                  = <%= @autosign %>
+  <%- end -%>
+  <%- if @manifest -%>
+  manifest                  = <%= @manifest %>
+  <%- end -%>
+  <%- if @report_handlers or @reporturl-%>
+  reports                   = <%= @reports_str %>
+    <%- if @reporturl -%>
+  reporturl                 = <%= @reporturl %>
+    <%- end -%>
+  <%- end -%>
+  <%- if @storeconfigs or @storeconfigs_backend -%>
+  storeconfigs              = true
+    <%- if @storeconfigs_backend -%>
+  storeconfigs_backend      = <%= @storeconfigs_backend %>
+    <%- end -%>
+  <%- end -%>
+  <%- if @trusted_node_data -%>
+  trusted_node_data         = true
+  <%- end -%>
+  <%- if @node_terminus -%>
+  node_terminus             = <%= @node_terminus %>
+  <%- end -%>
+  <%- if @external_nodes -%>
+  external_nodes            = <%= @external_nodes%>
+  <%- end -%>

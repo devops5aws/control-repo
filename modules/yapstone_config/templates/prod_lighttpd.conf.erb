@@ -1,0 +1,97 @@
+server.modules = ("mod_rewrite",
+                  "mod_redirect",
+                  "mod_proxy",
+                  "mod_accesslog",
+                  "mod_status",
+                  "mod_compress")
+debug.log-request-handling = "disable"
+#server.bind = ""
+server.port = <%= @server_port %>
+server.username = "<%= @server_user %>"
+server.groupname = "<%= @server_group %>"
+server.document-root = "<%= @server_documentroot %>"
+server.pid-file = "<%= @server_pidfile %>"
+accesslog.filename = "<%= @server_accesslog %>"
+server.errorlog = "<%= @server_errorlog %>"
+server.tag = "<%= @server_tag %>"
+server.indexfiles = ( "index.html" )
+server.max-connections = <%= @server_maxconns %>
+server.max-fds = <%= @server_maxfds %>
+
+mimetype.assign = (
+  ".css" => "text/css",
+  ".gif" => "image/gif",
+  ".html" => "text/html",
+  ".jpeg" => "image/jpeg",
+  ".jpg" => "image/jpeg",
+  ".js" => "text/javascript",
+  ".pdf" => "application/pdf",
+  ".png" => "image/png",
+  ".txt" => "text/plain",
+  ".mov"  => "video/quicktime",
+  ".m4v"  => "video/x-m4v",
+  ".mpeg" => "video/mpeg",
+  ".mpg"  => "video/mpeg",
+  ".3gp" => "video/3gpp",
+  ".mp4" => "video/mp4",
+  ".sqlite" => "text/plain",
+  "" => "application/octet-stream"
+)
+
+compress.allowed-encodings = ("bzip2", "gzip", "deflate")
+compress.cache-dir = "/var/www/cache/"
+compress.filetype  = (
+      "text/plain",
+       "text/html",
+       "application/octet-stream")
+
+<%- if @service_name == 'euro' -%>
+$HTTP["host"] =~ "^(https?:\/\/)?(www\.)?(holidayrentpayment)\.(co)\.uk$" {
+      url.redirect = ( "^(\/+index\.html?)?\/+(?!.)$" => "http://holidayrentpayment.eu" )
+    }
+
+
+$SERVER["socket"] == ":80" {
+
+  $HTTP["host"] =~ "^(holidayrentpayment|vacationrentpayment)\." {
+    url.redirect = ( "^/(.*)" => "http://www.%1.co.uk/$1" )
+  }
+  $HTTP["host"] =~ "^(yapstone\.ie)" {
+    url.redirect = ( "^/(.*)" => "http://www.holidayrentpayment.co.uk/$1" )
+  }
+  $HTTP["host"] !~ "co\.uk$" {
+    $HTTP["remoteip"] !~ "^(10\.128\.0\.|10\.128\.1\.|127\.0\.0\.1|10\.1\.|10\.2\.|10\.10\.1\.)" {
+      url.redirect = ( "^/(.*)" => "http://www.holidayrentpayment.co.uk/$1" )
+    }
+  }
+  $HTTP["host"] =~ "^(holidayrentpayment\.co\.uk)" {
+    url.redirect = ( "^/(.*)" => "http://www.%1/$1" )
+  }
+
+  $HTTP["host"] =~ "^www\.holidayrentpayment\.co\.uk" {
+
+    server.name = "www.holidayrentpayment.co.uk"
+    server.document-root = "/srv/data/content/holidayrentpayment"
+
+    url.rewrite-once = (
+      "^$"  => "/index.html"
+    )
+
+    $HTTP["url"] =~ "\.jsp" {
+      url.redirect = ( "^/(.*)" => "https://www.holidayrentpayment.co.uk/$1" )
+    }
+
+    $HTTP["url"] =~ "^(/[^/]+)?/(pay|instant|excel|export|realeum|scanner|rentpay|api|ivr)(/|$)" {
+      url.redirect = ( "^/(.*)" => "https://www.holidayrentpayment.co.uk/$1" )
+    }
+
+    $HTTP["url"] =~ "^(/rest/v1/Applications)" {
+      url.redirect = ( "^/(.*)" => "https://www.holidayrentpayment.co.uk/$1" )
+    }
+
+    $HTTP["remoteip"] =~ "^107\.0\.85\.6" {
+       include_shell "/etc/lighttpd/inc/proxy_url.sh remoting app"
+    }
+  }
+}
+<%- end -%>

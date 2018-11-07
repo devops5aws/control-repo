@@ -1,0 +1,16 @@
+#THIS FILE MANAGED BY PUPPET. MANUAL CHANGES WILL NOT BE SAVED.
+<%- if @resolv_domain -%>
+domain <%= @resolv_domain %>
+<%- end -%>
+<%- if @search1 -%>
+search <%= @search1 %>
+<%- end -%>
+<%- if @search2 -%>
+search <%= @search2 %>
+<%- end -%>
+<%- if @nameserver1 -%>
+nameserver <%= @nameserver1 %>
+<%- end -%>
+<%- if @nameserver2 -%>
+nameserver <%= @nameserver2 %>
+<%- end -%>

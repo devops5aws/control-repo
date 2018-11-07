@@ -1,0 +1,56 @@
+<% if ! @zk4 %>
+{
+        "default_lease_ttl" : "<%= @default_lease_ttl %>",
+        "max_lease_ttl": "<%= @max_lease_ttl %>",
+        "listener":
+        {
+                "tcp":
+                [
+                        {
+                                "address": "<%= @fqdn %>:<%= @vault_port %>",
+                                "tls_disable": 1
+                        },
+                        { "address": "127.0.0.1:<%= @vault_port %>", "tls_disable": 1 }
+                ]
+        },
+        "backend":
+        {
+                "zookeeper":
+                {
+                        "address": "<%= @zk1 %>:<%= @zk_port %>",
+                        "address": "<%= @zk2 %>:<%= @zk_port %>",
+                        "address": "<%= @zk3 %>:<%= @zk_port %>",
+                        "advertise_addr": "http://<%= @fqdn %>:<%= @vault_port %>"
+                }
+        }
+}
+<% end %>
+<% if @zk4 %>
+{
+        "default_lease_ttl" : "<%= @default_lease_ttl %>",
+        "max_lease_ttl": "<%= @max_lease_ttl %>",
+        "listener":
+        {
+                "tcp":
+                [
+                        {
+                                "address": "<%= @fqdn %>:<%= @vault_port %>",
+                                "tls_disable": 1
+                        },
+                        { "address": "127.0.0.1:<%= @vault_port %>", "tls_disable": 1 }
+                ]
+        },
+        "backend":
+        {
+                "zookeeper":
+                {
+                        "address": "<%= @zk1 %>:<%= @zk_port %>",
+                        "address": "<%= @zk2 %>:<%= @zk_port %>",
+                        "address": "<%= @zk3 %>:<%= @zk_port %>",
+                        "address": "<%= @zk4 %>:<%= @zk_port %>",
+                        "address": "<%= @zk5 %>:<%= @zk_port %>"
+                        "advertise_addr": "http://<%= @fqdn %>:<%= @vault_port %>"
+                }
+        }
+}
+<% end %>

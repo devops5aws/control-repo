@@ -1,0 +1,16 @@
+# MANAGED BY PUPPET
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+        . /etc/bashrc
+fi
+<%- if @bashrc_user == 'qualys' -%>
+<% scope.function_hiera(['profile::qualys::bashrc']).each do |line| -%>
+<%= line %>
+<% end -%>
+<%- elsif @bashrc_user == 'deploy' -%>
+<% scope.function_hiera(['profile::deploy::bashrc']).each do |line| -%>
+<%= line %>
+<% end -%>
+<%- end -%>

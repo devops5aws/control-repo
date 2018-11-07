@@ -1,0 +1,9 @@
+[deployment-client]
+# Set the phoneHome at the end of the PS engagement
+# 10 minutes
+# phoneHomeIntervalInSecs = 600
+
+[target-broker:deploymentServer]
+# Change the targetUri
+#targetUri = euw1-op01-deploymentserver-001.it.yapstone.com:8089
+targetUri = <%= @targetUri %>

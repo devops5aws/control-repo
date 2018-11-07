@@ -1,0 +1,14 @@
+## PUPPET MANAGE ##
+
+[main]
+    logdir = <%= @logdir %>
+    rundir = <%= @rundir %>
+    ssldir = <%= @ssldir %>
+
+[agent]
+    classfile = <%= @classfile %>
+    localconfig = <%= @localconfig %>
+    server = <%= @master_server %>
+    ca_server = <%= @ca_server %>
+    report = <%= @report %>
+    pluginsync = <%= @pluginsync %>
