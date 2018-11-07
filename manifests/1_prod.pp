@@ -39,16 +39,16 @@ File { backup => 'main' }
         ### Global Only ###
 ########################################
 
-#node default {
- #       class { 'motd': }
-#        include motd
+node default {
+        class { 'motd': }
+        include motd
         
 
 ##########################################
     ### Testing & Clons Nodes Only ###
 ##########################################
-
-node 'ip-172-31-32-150.ec2','ip-172-31-32-150'
+}
+node 'devops5.com', 'ip-172-31-32-150.ec2', 'ip-172-31-26-68.ec2'
 {
          include motd
 }
