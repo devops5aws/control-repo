@@ -48,7 +48,6 @@ File { backup => 'main' }
     ### Testing & Clons Nodes Only ###
 ##########################################
 
-}
 node '52.55.43.246','18.212.91.72'
 {
          include motd
