@@ -39,8 +39,8 @@ File { backup => 'main' }
         ### Global Only ###
 ########################################
 
-node default {
-        class { 'motd': }
+#node default {
+ #       class { 'motd': }
 #        include motd
         
 
