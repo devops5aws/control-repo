@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hudson>
+  <disabledAdministrativeMonitors/>
+  <version>1.658</version>
+  <numExecutors>5</numExecutors>
+  <mode>NORMAL</mode>
+  <useSecurity>true</useSecurity>
+  <authorizationStrategy class="hudson.security.ProjectMatrixAuthorizationStrategy">
+<% @ad_account.each do |line| -%>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.Create:<%= line %></permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.Delete:<%= line %></permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.ManageDomains:<%= line %></permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.Update:<%= line %></permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.View:<%= line %></permission>
+    <permission>hudson.model.Computer.Build:<%= line %></permission>
+    <permission>hudson.model.Computer.Configure:<%= line %></permission>
+    <permission>hudson.model.Computer.Connect:<%= line %></permission>
+    <permission>hudson.model.Computer.Create:<%= line %></permission>
+    <permission>hudson.model.Computer.Delete:<%= line %></permission>
+    <permission>hudson.model.Computer.Disconnect:<%= line %></permission>
+    <permission>hudson.model.Hudson.Administer:<%= line %></permission>
+    <permission>hudson.model.Hudson.ConfigureUpdateCenter:<%= line %></permission>
+    <permission>hudson.model.Hudson.Read:<%= line %></permission>
+    <permission>hudson.model.Hudson.RunScripts:<%= line %></permission>
+    <permission>hudson.model.Hudson.UploadPlugins:<%= line %></permission>
+    <permission>hudson.model.Item.Build:<%= line %></permission>
+    <permission>hudson.model.Item.Cancel:<%= line %></permission>
+    <permission>hudson.model.Item.Configure:<%= line %></permission>
+    <permission>hudson.model.Item.Create:<%= line %></permission>
+    <permission>hudson.model.Item.Delete:<%= line %></permission>
+    <permission>hudson.model.Item.Discover:<%= line %></permission>
+    <permission>hudson.model.Item.Read:<%= line %></permission>
+    <permission>hudson.model.Item.Workspace:<%= line %></permission>
+    <permission>hudson.model.Run.Delete:<%= line %></permission>
+    <permission>hudson.model.Run.Update:<%= line %></permission>
+    <permission>hudson.model.View.Configure:<%= line %></permission>
+    <permission>hudson.model.View.Create:<%= line %></permission>
+    <permission>hudson.model.View.Delete:<%= line %></permission>
+    <permission>hudson.model.View.Read:<%= line %></permission>
+    <permission>hudson.scm.SCM.Tag:<%= line %></permission>
+<% end -%>
+  </authorizationStrategy>
+  <securityRealm class="org.jenkinsci.plugins.saml.SamlSecurityRealm" plugin="saml@0.5">
+    <idpMetadata><%= @ad_creds %></idpMetadata>
+    <displayNameAttributeName>http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name</displayNameAttributeName>
+    <groupsAttributeName>http://schemas.xmlsoap.org/claims/Group</groupsAttributeName>
+    <maximumAuthenticationLifetime>86400</maximumAuthenticationLifetime>
+    <usernameCaseConversion>none</usernameCaseConversion>
+  </securityRealm>
+  <disableRememberMe>false</disableRememberMe>
+  <projectNamingStrategy class="jenkins.model.ProjectNamingStrategy$DefaultProjectNamingStrategy"/>
+  <workspaceDir>${JENKINS_HOME}/workspace/${ITEM_FULLNAME}</workspaceDir>
+  <buildsDir>${ITEM_ROOTDIR}/builds</buildsDir>
+  <markupFormatter class="hudson.markup.EscapedMarkupFormatter"/>
+  <jdks/>
+  <viewsTabBar class="hudson.views.DefaultViewsTabBar"/>
+  <myViewsTabBar class="hudson.views.DefaultMyViewsTabBar"/>
+  <clouds>
+    <hudson.plugins.ec2.EC2Cloud plugin="ec2@1.31">
+      <name>ec2-Jenkins Slaves</name>
+      <useInstanceProfileForCredentials>true</useInstanceProfileForCredentials>
+      <accessId><%= @aws_slave_id %></accessId>
+      <secretKey><%= @aws_slave_secret %></secretKey>
+      <privateKey>
+        <privateKey><%= @aws_slave_key_pair %></privateKey>
+      </privateKey>
+      <instanceCap><%= @aws_slave_instancecap %></instanceCap>
+      <templates>
+        <hudson.plugins.ec2.SlaveTemplate>
+          <ami><%= @aws_slave_ami %></ami>
+          <description><%= @aws_slave_name %></description>
+          <zone></zone>
+          <securityGroups><%= @aws_slave_sg %></securityGroups>
+          <remoteFS><%= @aws_slave_dir %></remoteFS>
+          <type><%= @aws_slave_instance_type %></type>
+          <ebsOptimized>false</ebsOptimized>
+          <labels></labels>
+          <mode>NORMAL</mode>
+          <initScript><%= @aws_slave_initscript %></initScript>
+          <tmpDir></tmpDir>
+          <userData></userData>
+          <numExecutors><%= @aws_slave_numexecutors %></numExecutors>
+          <remoteAdmin>root</remoteAdmin>
+          <jvmopts></jvmopts>
+          <subnetId><%= @aws_slave_subnet %></subnetId>
+          <idleTerminationMinutes>30</idleTerminationMinutes>
+          <iamInstanceProfile><%= @aws_slave_iam_profile %></iamInstanceProfile>
+          <useEphemeralDevices>false</useEphemeralDevices>
+          <customDeviceMapping></customDeviceMapping>
+          <instanceCap>10</instanceCap>
+          <stopOnTerminate>false</stopOnTerminate>
+          <tags>
+            <hudson.plugins.ec2.EC2Tag>
+              <name>Component</name>
+              <value>op_usw2</value>
+            </hudson.plugins.ec2.EC2Tag>
+            <hudson.plugins.ec2.EC2Tag>
+              <name>Product</name>
+              <value>jenkins_slave</value>
+            </hudson.plugins.ec2.EC2Tag>
+            <hudson.plugins.ec2.EC2Tag>
+              <name>Name</name>
+              <value><%= @aws_slave_hostname %></value>
+            </hudson.plugins.ec2.EC2Tag>
+            <hudson.plugins.ec2.EC2Tag>
+              <name>AS_Name</name>
+              <value>ec2_tag_aws_autoscaling_groupname</value>
+            </hudson.plugins.ec2.EC2Tag>
+          </tags>
+          <usePrivateDnsName>true</usePrivateDnsName>
+          <associatePublicIp>false</associatePublicIp>
+          <useDedicatedTenancy>false</useDedicatedTenancy>
+          <amiType class="hudson.plugins.ec2.UnixData">
+            <rootCommandPrefix></rootCommandPrefix>
+            <sshPort>22</sshPort>
+          </amiType>
+          <launchTimeout>2147483647</launchTimeout>
+          <connectBySSHProcess>false</connectBySSHProcess>
+          <connectUsingPublicIp>false</connectUsingPublicIp>
+        </hudson.plugins.ec2.SlaveTemplate>
+      </templates>
+      <region><%= @aws_slave_region %></region>
+    </hudson.plugins.ec2.EC2Cloud>
+  </clouds>
+  <quietPeriod>5</quietPeriod>
+  <scmCheckoutRetryCount>0</scmCheckoutRetryCount>
+  <views>
+    <hudson.model.AllView>
+      <owner class="hudson" reference="../../.."/>
+      <name>All</name>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+    </hudson.model.AllView>
+  </views>
+  <primaryView>All</primaryView>
+  <slaveAgentPort>0</slaveAgentPort>
+  <label></label>
+  <nodeProperties/>
+  <globalNodeProperties/>
+</hudson>

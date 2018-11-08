@@ -1,0 +1,20 @@
+# Manage by Puppet changes will be overwritten
+
+tickTime=<%= @tick_time %>
+dataDir=<%= @data_dir %>
+clientPort=<%= @client_port %>
+initLimit=<%= @init_limit %>
+syncLimit=<%= @sync_limit %>
+server.1=<%= @server1 %>:<%= @leader_port %>:<%= @leader_election_port %>
+<%- if @server2 -%>
+server.2=<%= @server2 %>:<%= @leader_port %>:<%= @leader_election_port %>
+<%- end -%>
+<%- if @server3 -%>
+server.3=<%= @server3 %>:<%= @leader_port %>:<%= @leader_election_port %>
+<%- end -%>
+<%- if @server4 -%>
+server.4=<%= @server4 %>:<%= @leader_port %>:<%= @leader_election_port %>
+<%- end -%>
+<%- if @server5 -%>
+server.5=<%= @server5 %>:<%= @leader_port %>:<%= @leader_election_port %>
+<%- end -%>

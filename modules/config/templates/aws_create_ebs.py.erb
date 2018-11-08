@@ -1,0 +1,36 @@
+#!/usr/bin/env python2.7
+
+""" Creates a EBS Volume then Attaches it to the EC2
+"""
+import boto.ec2
+import socket
+import subprocess
+import time
+
+aws_r = boto.ec2.connect_to_region('<%= @aws_region %>')
+vol = aws_r.create_volume(<%= @aws_diskspace %>, '<%= @aws_availzone %>', volume_type='<%= @aws_disktype %>')
+url = 'http://169.254.169.254/latest/meta-data/instance-id'
+instance_id = subprocess.check_output(['curl', '-s', url])
+
+aws_r.create_tags([vol.id], {"Name":socket.gethostname()})
+chk_vol = aws_r.get_all_volumes([vol.id])[0]
+
+print 'Instance Id:', instance_id
+print 'Volume Id:', vol.id
+print 'Volume Status:', chk_vol.status
+print 'Volume Zone:', chk_vol.zone
+print 'Volume Device:', chk_vol.attach_data.device
+
+for _ in range(0,<%= @aws_retrysec %>):
+    avail = 'available'
+    # Need to close previous connections
+    aws_r.close()
+    aws_r = boto.ec2.connect_to_region('<%= @aws_region %>')
+    chk_vol = aws_r.get_all_volumes([vol.id])[0]
+
+    print 'Waiting for Volume', chk_vol.status
+    if chk_vol.status  == avail:
+        attach  = aws_r.attach_volume (vol.id, instance_id, '<%= @aws_devicepath %>')
+        print 'Attach Volume Result: ', attach
+        break
+    time.sleep(1)

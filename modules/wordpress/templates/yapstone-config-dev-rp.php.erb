@@ -1,0 +1,54 @@
+<?php
+
+// ** MySQL settings - You can get this info from your web host ** //
+/** The name of the database for WordPress */
+define('DB_NAME', '<%= @wp_dbname %>');
+
+/** MySQL database username */
+define('DB_USER', '<%= @wp_dbuser %>');
+
+/** MySQL database password */
+define('DB_PASSWORD', '<%= @wp_dbpasswd %>');
+
+/** MySQL hostname */
+define('DB_HOST', '<%= @wp_dbhost %>');
+
+/** Database Charset to use in creating database tables. */
+define('DB_CHARSET', 'utf8');
+
+/** The Database Collate type. Don't change this if in doubt. */
+define('DB_COLLATE', '');
+
+/**#@+
+ * Authentication Unique Keys and Salts.
+ *
+ * Change these to different unique phrases!
+ * You can generate these using the {@link https://api.wordpress.org/secret-key/1.1/salt/ WordPress.org secret-key service}
+ * You can change these at any point in time to invalidate all existing cookies. This will force all users to have to log in again.
+ *
+ * @since 2.6.0
+ */
+
+define('AUTH_KEY',         'zbzT<nSpp4Mf6(ZRFQ<&;tnXYRb/]?=ctmHDf>Q}H+d_2 ;R<%F`,B(YfV:^ad:+');
+define('SECURE_AUTH_KEY',  'ZLXl5-sNcet M$NZ|y-;&!QsovLN^i4Xti?lJrAQFZ-,`xL?uHZ$ExslY1n%*|31');
+define('LOGGED_IN_KEY',    'P%:u[)v_VB%=i6E`VkVmXE45Z-FIqmb(h ..KQTk(8q(?5u^iLC|vg-_WX@o+N|_');
+define('NONCE_KEY',        'I.Rx1uaP%rm:iB/W|>_-b?!uaQ9qPi PBz|cn0+)x2VyQIMm$_|`!Y+60i0(^N;|');
+define('AUTH_SALT',        'v*:!T/M<st}jg[9Q>.G)j_nC#-+-h)v96KDO&K)41f{h>Jk8#P;.t^q3+ eT|$4l');
+define('SECURE_AUTH_SALT', 'qmVje+}Al|Y$wJ]Df--!t@R-|jIT27swwi,bIG|-uot^I-A@56>5&wsX:L:0$m%]');
+define('LOGGED_IN_SALT',   'vaa}p=X`PQglGE_?fwxp]n}?Fj8pF(CWvU#SM@:;rH`rtLaL-^4GWfjr?v1a+V++');
+define('NONCE_SALT',       'j~tScZ-8[F|*K=Dl+s|Y(:]qJ8Bm]I (h.Jhdy@R!-w,OoXtUR:n@4Tb?c`ng~a/');
+
+/**#@-*/
+
+/**
+ * WordPress Database Table prefix.
+ *
+ * You can have multiple installations in one database if you give each a unique
+ * prefix. Only numbers, letters, and underscores please!
+ */
+$table_prefix  = 'rentpaymentwp_';
+
+/* define proxy settings here */
+define('WP_PROXY_HOST', 'proxy.oak.yapstone.com');
+define('WP_PROXY_PORT', '3128');
+define('WP_PROXY_BYPASS_HOSTS', 'localhost, www.rentpayment.com');

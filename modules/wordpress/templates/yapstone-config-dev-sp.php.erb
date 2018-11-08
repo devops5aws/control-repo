@@ -1,0 +1,49 @@
+<?php
+
+// ** MySQL settings - You can get this info from your web host ** //
+/** The name of the database for WordPress */
+define('DB_NAME', '<%= @wp_dbname %>');
+
+/** MySQL database username */
+define('DB_USER', '<%= @wp_dbuser %>');
+
+/** MySQL database password */
+define('DB_PASSWORD', '<%= @wp_dbpasswd %>');
+
+/** MySQL hostname */
+define('DB_HOST', '<%= @wp_dbhost %>');
+
+/** Database Charset to use in creating database tables. */
+define('DB_CHARSET', 'utf8');
+
+/** The Database Collate type. Don't change this if in doubt. */
+define('DB_COLLATE', '');
+
+/**#@+
+ * Authentication Unique Keys and Salts.
+ *
+ * Change these to different unique phrases!
+ * You can generate these using the {@link https://api.wordpress.org/secret-key/1.1/salt/ WordPress.org secret-key service}
+ * You can change these at any point in time to invalidate all existing cookies. This will force all users to have to log in again.
+ *
+ * @since 2.6.0
+ */
+
+define('AUTH_KEY',         '6f-Szkt|{9a)Y8._/{wciu>.Ea_FRSG!WI^su!>o#xmk4mE#`i_jqG?J++?H<R1O');
+define('SECURE_AUTH_KEY',  'asuM6;4&Or~ DARloxZ3jwPR-dm~{{~Ttu~]<Bs6s]zkb`8C%~-*{UiowwVnlq>@');
+define('LOGGED_IN_KEY',    'x_NgYU m7UiVqKa]=Y+AYiiGOAE r,h~Z5JJz}[1.:!:zvTf1A+Rp-D#kmzB^|xS');
+define('NONCE_KEY',        'q)RvOAoQcpVbyW<9j-C76+SE|(-5`?RJeEL!I~9Iz)5WlUpmG[}D3sk#H+X:zA&S');
+define('AUTH_SALT',        'fJ^Ammh6_/_|,UFc?+-(%IC3 v^s?+{9d8RL+lx,*FHIeFuv+(WKH+j?kc?*Uu}a');
+define('SECURE_AUTH_SALT', 'P]C%Q9z|r~niaZ6F0[<_KyKrL-M@^C&0+D0^[<bp}Y;^_FcJGAZFLt|$W11vjr{o');
+define('LOGGED_IN_SALT',   '|{:;m3)8-%F=aYjV0-y|<!`.0JkJb8W|R!PX:Ph#I@abOyU(Lj|9REmWW|48Q9OG');
+define('NONCE_SALT',       ':v;m/af7$(=;SY90+6g)JjI@PWxy6,t`)_nI}IohTo@YzDP>9?~)6>[+/xTH$T(d');
+
+/**#@-*/
+
+/**
+ * WordPress Database Table prefix.
+ *
+ * You can have multiple installations in one database if you give each a unique
+ * prefix. Only numbers, letters, and underscores please!
+ */
+$table_prefix  = 'storagerentpaymentwp_';
