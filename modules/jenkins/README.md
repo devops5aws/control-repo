@@ -1,13 +1,13 @@
-# yapstone_jenkins
+# jenkins
 
 #### Table of Contents
 
 1. [Overview](#overview)
 2. [Module Description - What the module does and why it is useful](#module-description)
 3. [Setup - The basics of getting started with yapstone_jenkins](#setup)
-    * [What yapstone_jenkins affects](#what-yapstone_jenkins-affects)
+    * [What jenkins affects](#what-jenkins-affects)
     * [Setup requirements](#setup-requirements)
-    * [Beginning with yapstone_jenkins](#beginning-with-yapstone_jenkins)
+    * [Beginning with jenkins](#beginning-with-jenkins)
 4. [Usage - Configuration options and additional functionality](#usage)
 5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
 5. [Limitations - OS compatibility, etc.](#limitations)
